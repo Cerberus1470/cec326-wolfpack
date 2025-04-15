@@ -6,29 +6,38 @@ const char MAIN_page[] PROGMEM = R"=====(
 <div id="demo">
 <h1>CEC 326 Robot interface without refresh via AJAX</h1>
   <button type="button" onclick="sendData(1)">LED ON</button>
-  <button type="button" onclick="sendData(0)">LED OFF</button><BR>
-  <input type="range" min="-90" max="90" value="0" class="slider" id="motorPower">
+  <button type="button" onclick="sendData(0)">LED OFF</button>
+  <button type="button" onclick="stop">STOP</button><br>
+  <input type="range" min="-100" max="100" value="0" class="slider" id="motorA">
   <label for="motorPower">Motor Power</label><br><br>
-  <input type="range" min="-90" max="90" value="0" class="slider" id="motorSteer">
+  <input type="range" min="-100" max="100" value="0" class="slider" id="motorB">
   <label for="motorSteer">Motor Steering</label><br>
 </div>
 
 <div>
-  Motor Power is : <span id="powerVal">0</span><br>
-  Steering is : <span id="steerVal">0</span>
+  Motor A is : <span id="powerA">0</span><br>
+  Motor B is : <span id="powerB">0</span>
 </div>
 <script>
 
-var power = document.getElementById("motorPower");
-var steer = document.getElementById("motorSteer");
-power.oninput = function() {
+var powerA = document.getElementById("motorA");
+var powerB = document.getElementById("motorB");
+powerA.oninput = function() {
   var xhttp = new XMLHttpRequest();
-  xhttp.open("GET", "P="+power.value+","+steer.value, true);
+  xhttp.open("GET", "P="+powerA.value+","+powerB.value, true);
   xhttp.send();
 }
-steer.oninput = function() {
+powerB.oninput = function() {
   var xhttp = new XMLHttpRequest();
-  xhttp.open("GET", "P="+power.value+","+steer.value, true);
+  xhttp.open("GET", "P="+powerA.value+","+powerB.value, true);
+  xhttp.send();
+}
+
+function stop() {
+  var xhttp = new XMLHttpRequest();
+  xhttp.open("GET", "P=0,0", true);
+  powerA.value = 0;
+  powerB.value = 0;
   xhttp.send();
 }
 

@@ -125,28 +125,29 @@ void loop() {
               client.println(createOKResponse("text/plain", "L"));
             } else if(getRequest.startsWith("P=")) {
               String package = getRequest.substring(getRequest.indexOf('=')+1);
-              int power = package.substring(0,getRequest.indexOf(',')).toInt();
-              String steering = package.substring(getRequest.indexOf(',')+1);
-              Serial.println("Power: " + String(power) + "\t steering: " + String(steering));
-              steering = map(steering, -90, 90, -1, 1);
-              if (power > 0) { // Forward
-                power = map(power, 0, 90, 0, 255);
-                Serial.println("AIN: " + String(power) + "\t bruh: " + String(steering));
-                analogWrite(AIN1, power);
+              int powerA = package.substring(0,package.indexOf(',')).toInt();
+              int powerB = package.substring(package.indexOf(',')+1).toInt();
+              // Serial.println("Power: " + String(power) + "\t steering: " + String(steering));
+              powerA = map(powerA, -100, 100, -255, 255);
+              powerB = map(powerB, -100, 100, -255, 255);
+              if (powerA > 0) {
+                analogWrite(AIN1, powerA);
                 analogWrite(AIN2, 0);
-                analogWrite(BIN1, (1-steering)*power);
-                analogWrite(BIN2, 0);
-              }
-              else if (power < 0) { // Backward
-                power = map(power, 0, -90, 0, 255);
+              } else if (powerA < 0) {
                 analogWrite(AIN1, 0);
-                analogWrite(AIN2, power);
-                analogWrite(BIN1, 0);
-                analogWrite(BIN2, power);
-              }
-              else {
+                analogWrite(AIN2, powerA);
+              } else {
                 analogWrite(AIN1, 255);
                 analogWrite(AIN2, 255);
+              }
+              // Motor B
+              if (powerB > 0) {
+                analogWrite(BIN1, powerB);
+                analogWrite(BIN2, 0);
+              } else if (powerB < 0) {
+                analogWrite(BIN1, 0);
+                analogWrite(BIN2, powerB);
+              } else {
                 analogWrite(BIN1, 255);
                 analogWrite(BIN2, 255);
               }
