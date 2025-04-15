@@ -7,7 +7,7 @@ const char MAIN_page[] PROGMEM = R"=====(
 <h1>CEC 326 Robot interface without refresh via AJAX</h1>
   <button type="button" onclick="sendData(1)">LED ON</button>
   <button type="button" onclick="sendData(0)">LED OFF</button><BR>
-  <input type="range" min="1" max="180" value="0" class="slider" id="motorPower">
+  <input type="range" min="-90" max="90" value="0" class="slider" id="motorPower">
   <label for="motorPower">Motor Power</label><br><br>
   <input type="range" min="-90" max="90" value="0" class="slider" id="motorSteer">
   <label for="motorSteer">Motor Steering</label><br>

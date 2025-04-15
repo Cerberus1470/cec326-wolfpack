@@ -125,14 +125,31 @@ void loop() {
               client.println(createOKResponse("text/plain", "L"));
             } else if(getRequest.startsWith("P=")) {
               String package = getRequest.substring(getRequest.indexOf('=')+1);
-              int power = package.substring(0,indexOf(',')).toInt();
-              int steering = package.substring(indexOf(',')+1).toInt();
-              power = map(power, 0, 180, 0, 255);
-              float steerLeft = map()
-              analogWrite(AIN1, 255);
-              analogWrite(AIN2, 0);
-              analogWrite(BIN1, 255);
-              analogWrite(BIN2, 0);
+              int power = package.substring(0,getRequest.indexOf(',')).toInt();
+              String steering = package.substring(getRequest.indexOf(',')+1);
+              Serial.println("Power: " + String(power) + "\t steering: " + String(steering));
+              steering = map(steering, -90, 90, -1, 1);
+              if (power > 0) { // Forward
+                power = map(power, 0, 90, 0, 255);
+                Serial.println("AIN: " + String(power) + "\t bruh: " + String(steering));
+                analogWrite(AIN1, power);
+                analogWrite(AIN2, 0);
+                analogWrite(BIN1, (1-steering)*power);
+                analogWrite(BIN2, 0);
+              }
+              else if (power < 0) { // Backward
+                power = map(power, 0, -90, 0, 255);
+                analogWrite(AIN1, 0);
+                analogWrite(AIN2, power);
+                analogWrite(BIN1, 0);
+                analogWrite(BIN2, power);
+              }
+              else {
+                analogWrite(AIN1, 255);
+                analogWrite(AIN2, 255);
+                analogWrite(BIN1, 255);
+                analogWrite(BIN2, 255);
+              }
               Serial.println(getRequest);
             } else if(getRequest == "readADC") {
               client.println(createOKResponse("text/plain", String(adcVal)));
